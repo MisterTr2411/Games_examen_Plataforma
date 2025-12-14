@@ -1,0 +1,33 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ProductoController;
+use App\Http\Controllers\FavoritoController;
+use App\Http\Controllers\ComentarioController;
+
+Route::post('register', [AuthController::class, 'register']);
+Route::post('login', [AuthController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+
+    Route::post('logout', [AuthController::class, 'logout']);
+
+    // Productos (solo admin)
+    Route::post('productos', [ProductoController::class, 'store']);
+    Route::put('productos/{id}', [ProductoController::class, 'update']);
+    Route::delete('productos/{id}', [ProductoController::class, 'destroy']);
+
+    // Catálogo (usuario logueado)
+    Route::get('productos', [ProductoController::class, 'index']);
+    Route::get('productos/{id}', [ProductoController::class, 'show']);
+
+    // Favoritos
+    Route::post('favoritos/{id}', [FavoritoController::class, 'add']);
+    Route::delete('favoritos/{id}', [FavoritoController::class, 'remove']);
+    Route::get('favoritos', [FavoritoController::class, 'listar']);
+
+    // Comentarios
+    Route::post('productos/{id}/comentarios', [ComentarioController::class, 'store']);
+    Route::get('productos/{id}/comentarios', [ComentarioController::class, 'index']);
+});
